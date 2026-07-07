@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ines Abdelaziz — Travel Photography</title>
+<style>
+  :root{
+    --bg:#0b0b0d;
+    --bg-alt:#161618;
+    --fg:#f4f2ec;
+    --fg-dim:#a3a2a0;
+    --accent:#d8c9a3;
+    --border:rgba(255,255,255,0.09);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--fg);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+  .serif{ font-family:Georgia,'Times New Roman',serif; }
+  a{ color:inherit; }
+
+  /* ---------- Nav ---------- */
+  header{
+    position:fixed;
+    top:0; left:0; right:0;
+    z-index:100;
+    padding:22px 0;
+    transition:background .35s ease, padding .35s ease, border-color .35s ease;
+    border-bottom:1px solid transparent;
+  }
+  header.scrolled{
+    background:rgba(11,11,13,0.85);
+    backdrop-filter:blur(12px);
+    padding:14px 0;
+    border-color:var(--border);
+  }
+  nav{
+    max-width:1300px;
+    margin:0 auto;
+    padding:0 32px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:14px;
+  }
+  .brand{
+    font-size:1.05rem;
+    letter-spacing:0.1em;
+    text-transform:uppercase;
+    font-weight:600;
+  }
+  .navlinks{
+    display:flex;
+    gap:26px;
+    flex-wrap:wrap;
+    list-style:none;
+    margin:0;
+    padding:0;
+  }
+  .navlinks a{
+    color:var(--fg-dim);
+    text-decoration:none;
+    font-size:0.78rem;
+    letter-spacing:0.08em;
+    text-transform:uppercase;
+    transition:color .2s;
+    position:relative;
+  }
+  .navlinks a::after{
+    content:'';
+    position:absolute;
+    left:0; bottom:-5px;
+    width:0; height:1px;
+    background:var(--accent);
+    transition:width .25s ease;
+  }
+  .navlinks a:hover{ color:var(--fg); }
+  .navlinks a:hover::after{ width:100%; }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative;
+    height:100vh;
+    min-height:560px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    overflow:hidden;
+  }
+  .hero-bg{
+    position:absolute;
+    inset:0;
+    background-size:cover;
+    background-position:center 40%;
+    transform:scale(1.08);
+    animation:heroZoom 18s ease-out forwards;
+  }
+  @keyframes heroZoom{
+    from{ transform:scale(1.15); }
+    to{ transform:scale(1.0); }
+  }
+  .hero::after{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:linear-gradient(180deg, rgba(8,8,10,0.55) 0%, rgba(8,8,10,0.35) 40%, rgba(8,8,10,0.9) 100%);
+  }
+  .hero-content{
+    position:relative;
+    z-index:2;
+    max-width:760px;
+    padding:0 28px;
+  }
+  .hero-content .tag{
+    display:inline-block;
+    margin-bottom:22px;
+    color:var(--accent);
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:0.75rem;
+    opacity:0;
+    animation:fadeUp .9s ease .2s forwards;
+  }
+  .hero-content h1{
+    font-size:clamp(2.4rem, 6vw, 4.4rem);
+    font-weight:400;
+    line-height:1.15;
+    margin:0 0 22px;
+    opacity:0;
+    animation:fadeUp 1s ease .45s forwards;
+  }
+  .hero-content p{
+    color:var(--fg-dim);
+    font-size:1.1rem;
+    line-height:1.75;
+    max-width:540px;
+    margin:0 auto;
+    opacity:0;
+    animation:fadeUp 1s ease .7s forwards;
+  }
+  @keyframes fadeUp{
+    from{ opacity:0; transform:translateY(22px); }
+    to{ opacity:1; transform:translateY(0); }
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:34px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:2;
+    color:var(--fg-dim);
+    font-size:0.7rem;
+    letter-spacing:0.2em;
+    text-transform:uppercase;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    opacity:0;
+    animation:fadeUp 1s ease 1.1s forwards;
+  }
+  .scroll-cue .chevron{
+    width:14px; height:14px;
+    border-right:1px solid var(--fg-dim);
+    border-bottom:1px solid var(--fg-dim);
+    transform:rotate(45deg);
+    animation:bounce 1.8s ease-in-out infinite;
+  }
+  @keyframes bounce{
+    0%,100%{ transform:rotate(45deg) translate(0,0); }
+    50%{ transform:rotate(45deg) translate(4px,4px); }
+  }
+
+  /* ---------- Reveal on scroll ---------- */
+  .reveal{
+    opacity:0;
+    transform:translateY(28px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  .reveal.in{
+    opacity:1;
+    transform:translateY(0);
+  }
+
+  /* ---------- Destination sections ---------- */
+  .destination{
+    max-width:1300px;
+    margin:0 auto;
+    padding:90px 32px 20px;
+  }
+  .dest-heading{
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-between;
+    gap:20px;
+    margin-bottom:30px;
+    flex-wrap:wrap;
+  }
+  .dest-heading .titles h2{
+    font-size:clamp(1.6rem,3vw,2.3rem);
+    font-weight:400;
+    margin:0 0 6px;
+  }
+  .dest-heading .titles .count{
+    color:var(--fg-dim);
+    font-size:0.8rem;
+    letter-spacing:0.05em;
+  }
+  .carousel-controls{
+    display:flex;
+    gap:10px;
+  }
+  .carousel-controls button{
+    width:42px; height:42px;
+    border-radius:50%;
+    border:1px solid var(--border);
+    background:transparent;
+    color:var(--fg);
+    font-size:1.1rem;
+    cursor:pointer;
+    transition:background .2s, border-color .2s, transform .2s;
+  }
+  .carousel-controls button:hover{
+    background:var(--accent);
+    border-color:var(--accent);
+    color:#1a1a1a;
+    transform:scale(1.06);
+  }
+
+  .carousel-wrap{
+    position:relative;
+  }
+  .carousel{
+    display:flex;
+    gap:14px;
+    overflow-x:auto;
+    scroll-snap-type:x proximity;
+    padding-bottom:14px;
+    cursor:grab;
+    scrollbar-width:thin;
+    scrollbar-color:var(--border) transparent;
+  }
+  .carousel.dragging{ cursor:grabbing; scroll-snap-type:none; }
+  .carousel::-webkit-scrollbar{ height:6px; }
+  .carousel::-webkit-scrollbar-thumb{ background:var(--border); border-radius:4px; }
+
+  .carousel .card{
+    flex:0 0 auto;
+    scroll-snap-align:start;
+    height:400px;
+    border-radius:6px;
+    overflow:hidden;
+    background:var(--bg-alt);
+    position:relative;
+    transition:transform .35s ease;
+  }
+  .carousel .card:hover{ transform:translateY(-6px); }
+  .carousel .card img{
+    height:100%;
+    width:100%;
+    object-fit:cover;
+    display:block;
+    cursor:pointer;
+    opacity:0;
+    transition:opacity .5s ease;
+    -webkit-user-drag:none;
+    user-select:none;
+  }
+  .carousel .card img.loaded{ opacity:1; }
+
+  @media (max-width:700px){
+    .carousel .card{ height:300px; }
+    .destination{ padding:60px 20px 10px; }
+  }
+
+  /* ---------- Contact ---------- */
+  .contact{
+    max-width:760px;
+    margin:0 auto;
+    padding:130px 32px 140px;
+    text-align:center;
+  }
+  .contact .tag{
+    color:var(--accent);
+    letter-spacing:0.28em;
+    text-transform:uppercase;
+    font-size:0.75rem;
+    margin-bottom:20px;
+    display:inline-block;
+  }
+  .contact h2{
+    font-size:clamp(1.8rem,4vw,2.6rem);
+    font-weight:400;
+    margin:0 0 20px;
+  }
+  .contact p{
+    color:var(--fg-dim);
+    line-height:1.8;
+    margin:0 0 38px;
+  }
+  .contact-btn{
+    display:inline-flex;
+    align-items:center;
+    gap:12px;
+    padding:16px 34px;
+    border:1px solid var(--accent);
+    border-radius:40px;
+    text-decoration:none;
+    color:var(--fg);
+    font-size:0.95rem;
+    letter-spacing:0.03em;
+    position:relative;
+    overflow:hidden;
+    transition:color .35s ease;
+    z-index:1;
+  }
+  .contact-btn::before{
+    content:'';
+    position:absolute;
+    inset:0;
+    background:var(--accent);
+    transform:scaleX(0);
+    transform-origin:left;
+    transition:transform .35s ease;
+    z-index:-1;
+  }
+  .contact-btn:hover{ color:#1a1a1a; }
+  .contact-btn:hover::before{ transform:scaleX(1); }
+
+  footer{
+    text-align:center;
+    padding:0 28px 50px;
+    color:var(--fg-dim);
+    font-size:0.78rem;
+    letter-spacing:0.03em;
+  }
+
+  /* ---------- Lightbox ---------- */
+  .lightbox{
+    position:fixed;
+    inset:0;
+    background:rgba(5,5,6,0.97);
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:200;
+    flex-direction:column;
+  }
+  .lightbox.open{ display:flex; animation:fadeUp .3s ease; }
+  .lightbox img{
+    max-width:92vw;
+    max-height:82vh;
+    border-radius:2px;
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+  }
+  .lightbox .lb-caption{
+    color:var(--fg-dim);
+    margin-top:18px;
+    font-size:0.85rem;
+    letter-spacing:0.05em;
+  }
+  .lb-close, .lb-prev, .lb-next{
+    position:absolute;
+    background:none;
+    border:none;
+    color:var(--fg);
+    font-size:2rem;
+    cursor:pointer;
+    padding:10px 16px;
+    opacity:0.7;
+    transition:opacity .2s;
+  }
+  .lb-close:hover, .lb-prev:hover, .lb-next:hover{ opacity:1; }
+  .lb-close{ top:14px; right:14px; font-size:1.6rem; }
+  .lb-prev{ left:6px; top:50%; transform:translateY(-50%); }
+  .lb-next{ right:6px; top:50%; transform:translateY(-50%); }
+</style>
+</head>
+<body>
+
+<header id="siteHeader">
+  <nav>
+    <div class="brand">Ines Abdelaziz</div>
+    <ul class="navlinks" id="navlinks"></ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-bg" id="heroBg"></div>
+  <div class="hero-content">
+    <span class="tag">Travel Photography</span>
+    <h1 class="serif">Notes from the road, one frame at a time.</h1>
+    <p>I'm Ines — a beginner photographer chasing light in new cities. This is a small collection of what I've seen so far across Europe.</p>
+  </div>
+  <div class="scroll-cue"><span>Scroll</span><span class="chevron"></span></div>
+</section>
+
+<main id="galleries"></main>
+
+<section class="contact reveal">
+  <span class="tag">Get in touch</span>
+  <h2 class="serif">Let's talk photography.</h2>
+  <p>Whether it's feedback, a collaboration, or just where to point a camera next — I'd love to hear from you.</p>
+  <a class="contact-btn" href="mailto:ines.abdelaziz19@gmail.com">ines.abdelaziz19@gmail.com</a>
+</section>
+
+<footer>Ines Abdelaziz — Travel Photography</footer>
+
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">&times;</button>
+  <button class="lb-prev" id="lbPrev">&#8249;</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lb-caption" id="lbCaption"></div>
+  <button class="lb-next" id="lbNext">&#8250;</button>
+</div>
+
+<script>
+const MANIFEST = {
+  "strasbourg": {
+    "label": "Strasbourg, France",
+    "count": 82,
+    "images": [
+      {"name": "strasbourg_000.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_001.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_002.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_003.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_004.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_005.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_006.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_007.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_008.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_009.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_010.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_011.jpg", "w": 1210, "h": 1920},
+      {"name": "strasbourg_012.jpg", "w": 1397, "h": 1920},
+      {"name": "strasbourg_013.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_014.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_015.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_016.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_017.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_018.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_019.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_020.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_021.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_022.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_023.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_024.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_025.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_026.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_027.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_028.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_029.jpg", "w": 1080, "h": 1920},
+      {"name": "strasbourg_030.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_031.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_032.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_033.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_034.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_035.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_036.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_037.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_038.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_039.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_040.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_041.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_042.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_043.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_044.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_045.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_046.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_047.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_048.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_049.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_050.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_051.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_052.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_053.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_054.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_055.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_056.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_057.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_058.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_059.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_060.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_061.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_062.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_063.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_064.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_065.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_066.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_067.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_068.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_069.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_070.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_071.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_072.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_073.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_074.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_075.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_076.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_077.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_078.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_079.jpg", "w": 1279, "h": 1920},
+      {"name": "strasbourg_080.jpg", "w": 1920, "h": 1279},
+      {"name": "strasbourg_081.jpg", "w": 1279, "h": 1920}
+    ]
+  },
+  "paris": {
+    "label": "Paris, France",
+    "count": 22,
+    "images": [
+      {"name": "paris_000.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_001.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_002.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_003.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_004.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_005.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_006.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_007.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_008.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_009.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_010.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_011.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_012.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_013.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_014.jpg", "w": 1279, "h": 1920},
+      {"name": "paris_015.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_016.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_017.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_018.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_019.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_020.jpg", "w": 1920, "h": 1279},
+      {"name": "paris_021.jpg", "w": 1920, "h": 1279}
+    ]
+  },
+  "luxembourg": {
+    "label": "Luxembourg",
+    "count": 59,
+    "images": [
+      {"name": "luxembourg_000.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_001.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_002.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_003.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_004.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_005.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_006.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_007.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_008.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_009.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_010.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_011.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_012.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_013.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_014.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_015.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_016.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_017.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_018.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_019.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_020.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_021.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_022.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_023.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_024.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_025.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_026.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_027.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_028.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_029.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_030.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_031.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_032.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_033.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_034.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_035.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_036.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_037.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_038.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_039.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_040.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_041.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_042.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_043.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_044.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_045.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_046.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_047.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_048.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_049.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_050.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_051.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_052.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_053.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_054.jpg", "w": 1279, "h": 1920},
+      {"name": "luxembourg_055.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_056.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_057.jpg", "w": 1920, "h": 1279},
+      {"name": "luxembourg_058.jpg", "w": 1920, "h": 1279}
+    ]
+  },
+  "switzerland": {
+    "label": "Switzerland",
+    "count": 22,
+    "images": [
+      {"name": "switzerland_000.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_001.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_002.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_003.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_004.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_005.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_006.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_007.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_008.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_009.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_010.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_011.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_012.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_013.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_014.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_015.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_016.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_017.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_018.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_019.jpg", "w": 1920, "h": 1279},
+      {"name": "switzerland_020.jpg", "w": 1279, "h": 1920},
+      {"name": "switzerland_021.jpg", "w": 1920, "h": 1279}
+    ]
+  },
+  "spain": {
+    "label": "Spain",
+    "count": 21,
+    "images": [
+      {"name": "spain_000.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_001.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_002.jpg", "w": 1920, "h": 1279},
+      {"name": "spain_003.jpg", "w": 1920, "h": 1279},
+      {"name": "spain_004.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_005.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_006.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_007.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_008.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_009.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_010.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_011.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_012.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_013.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_014.jpg", "w": 1920, "h": 1279},
+      {"name": "spain_015.jpg", "w": 1920, "h": 1279},
+      {"name": "spain_016.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_017.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_018.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_019.jpg", "w": 1279, "h": 1920},
+      {"name": "spain_020.jpg", "w": 1279, "h": 1920}
+    ]
+  },
+  "germany": {
+    "label": "Cologne, Germany",
+    "count": 46,
+    "images": [
+      {"name": "germany_000.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_001.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_002.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_003.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_004.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_005.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_006.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_007.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_008.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_009.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_010.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_011.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_012.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_013.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_014.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_015.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_016.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_017.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_018.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_019.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_020.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_021.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_022.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_023.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_024.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_025.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_026.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_027.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_028.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_029.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_030.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_031.jpg", "w": 1920, "h": 1920},
+      {"name": "germany_032.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_033.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_034.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_035.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_036.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_037.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_038.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_039.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_040.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_041.jpg", "w": 1920, "h": 1920},
+      {"name": "germany_042.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_043.jpg", "w": 1920, "h": 1279},
+      {"name": "germany_044.jpg", "w": 1279, "h": 1920},
+      {"name": "germany_045.jpg", "w": 1279, "h": 1920}
+    ]
+  }
+};
+const order = ['strasbourg','paris','luxembourg','switzerland','spain','germany'];
+
+/* Hero background image */
+document.getElementById('heroBg').style.backgroundImage =
+  `url(images/switzerland/full/${MANIFEST.switzerland.images[7].name})`;
+
+/* Nav + galleries build */
+const galleriesEl = document.getElementById('galleries');
+const navEl = document.getElementById('navlinks');
+
+order.forEach(slug => {
+  const data = MANIFEST[slug];
+  if(!data) return;
+
+  const li = document.createElement('li');
+  li.innerHTML = `<a href="#${slug}">${data.label.split(',')[0]}</a>`;
+  navEl.appendChild(li);
+
+  const section = document.createElement('section');
+  section.className = 'destination';
+  section.id = slug;
+  section.innerHTML = `
+    <div class="dest-heading reveal">
+      <div class="titles">
+        <h2 class="serif">${data.label}</h2>
+        <span class="count">${data.count} photos</span>
+      </div>
+      <div class="carousel-controls">
+        <button class="prev" aria-label="Previous">&#8249;</button>
+        <button class="next" aria-label="Next">&#8250;</button>
+      </div>
+    </div>
+    <div class="carousel-wrap reveal">
+      <div class="carousel" data-slug="${slug}"></div>
+    </div>
+  `;
+  galleriesEl.appendChild(section);
+
+  const carousel = section.querySelector('.carousel');
+  data.images.forEach((img, idx) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+    const ratio = img.w / img.h;
+    card.style.width = `${Math.round(400 * ratio)}px`;
+    const image = document.createElement('img');
+    image.loading = 'lazy';
+    image.src = `images/${slug}/thumb/${img.name}`;
+    image.alt = `${data.label} photo ${idx+1}`;
+    image.addEventListener('load', () => image.classList.add('loaded'));
+    image.addEventListener('click', () => openLightbox(slug, idx));
+    card.appendChild(image);
+    carousel.appendChild(card);
+  });
+
+  // arrow controls
+  const prevBtn = section.querySelector('.prev');
+  const nextBtn = section.querySelector('.next');
+  prevBtn.addEventListener('click', () => carousel.scrollBy({ left: -carousel.clientWidth * 0.8, behavior: 'smooth' }));
+  nextBtn.addEventListener('click', () => carousel.scrollBy({ left: carousel.clientWidth * 0.8, behavior: 'smooth' }));
+
+  // drag to scroll
+  let isDown = false, startX, scrollLeft;
+  carousel.addEventListener('pointerdown', (e) => {
+    isDown = true;
+    carousel.classList.add('dragging');
+    startX = e.pageX;
+    scrollLeft = carousel.scrollLeft;
+  });
+  window.addEventListener('pointerup', () => { isDown = false; carousel.classList.remove('dragging'); });
+  carousel.addEventListener('pointerleave', () => { isDown = false; carousel.classList.remove('dragging'); });
+  carousel.addEventListener('pointermove', (e) => {
+    if(!isDown) return;
+    e.preventDefault();
+    const walk = (e.pageX - startX);
+    carousel.scrollLeft = scrollLeft - walk;
+  });
+});
+
+/* Header background on scroll */
+const header = document.getElementById('siteHeader');
+window.addEventListener('scroll', () => {
+  header.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* Reveal on scroll */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if(entry.isIntersecting){
+      entry.target.classList.add('in');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+/* Lightbox */
+const lightbox = document.getElementById('lightbox');
+const lbImg = document.getElementById('lbImg');
+const lbCaption = document.getElementById('lbCaption');
+let curSlug = null, curIdx = 0;
+
+function openLightbox(slug, idx){
+  curSlug = slug; curIdx = idx;
+  renderLightbox();
+  lightbox.classList.add('open');
+}
+function renderLightbox(){
+  const data = MANIFEST[curSlug];
+  const img = data.images[curIdx];
+  lbImg.src = `images/${curSlug}/full/${img.name}`;
+  lbCaption.textContent = `${data.label} — ${curIdx+1} / ${data.count}`;
+}
+function closeLightbox(){ lightbox.classList.remove('open'); }
+function nextImg(){
+  const data = MANIFEST[curSlug];
+  curIdx = (curIdx + 1) % data.images.length;
+  renderLightbox();
+}
+function prevImg(){
+  const data = MANIFEST[curSlug];
+  curIdx = (curIdx - 1 + data.images.length) % data.images.length;
+  renderLightbox();
+}
+document.getElementById('lbClose').addEventListener('click', closeLightbox);
+document.getElementById('lbNext').addEventListener('click', nextImg);
+document.getElementById('lbPrev').addEventListener('click', prevImg);
+lightbox.addEventListener('click', (e) => { if(e.target === lightbox) closeLightbox(); });
+document.addEventListener('keydown', (e) => {
+  if(!lightbox.classList.contains('open')) return;
+  if(e.key === 'Escape') closeLightbox();
+  if(e.key === 'ArrowRight') nextImg();
+  if(e.key === 'ArrowLeft') prevImg();
+});
+</script>
+
+</body>
+</html>
