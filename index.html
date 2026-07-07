@@ -558,9 +558,9 @@ const MANIFEST = {
 };
 const order = ['strasbourg','paris','luxembourg','switzerland','spain','germany'];
 
-/* Hero background image */
-document.getElementById('heroBg').style.backgroundImage =
-  `url(images/switzerland/full/${MANIFEST.switzerland.images[7].name})`;
+/* Hero background image — change this filename to swap the landing photo */
+const HERO_IMAGE = 'images/switzerland/full/switzerland_004.jpg';
+document.getElementById('heroBg').style.backgroundImage = `url(${HERO_IMAGE})`;
 
 /* Nav + galleries build */
 const galleriesEl = document.getElementById('galleries');
