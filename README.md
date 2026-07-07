@@ -4,14 +4,6 @@ A personal photography portfolio showcasing shots from recent trips across Europ
 
 Still learning, still looking — this is a growing collection of frames from the road.
 
-## Features
-
-- Full-screen animated landing page
-- Horizontal, draggable photo carousel for each destination
-- Click-to-enlarge lightbox with keyboard navigation
-- Scroll-triggered reveal animations
-- Contact section
-- No frameworks, no build step — plain HTML, CSS, and JavaScript
 
 ## Structure
 
