@@ -16,3 +16,7 @@ images/<destination>/full/    lightbox-size photos (~1920px)
 ## Destinations
 
 Strasbourg · Paris · Luxembourg · Switzerland · Spain · Cologne
+
+### Copyright
+
+All photographs © 2026 Ines Abdelaziz. All rights reserved. See LICENSE for details.
